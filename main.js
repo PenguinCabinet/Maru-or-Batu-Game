@@ -40,7 +40,7 @@ class GameMain extends Phaser.Scene {
     create() {
         this.state = {};
         this.state.score = 0;
-        this.state.game_time = 60;
+        this.state.game_time = Game_Time;
         this.state.start_time = new Date();
 
         this.left_text = this.add.text(0, 0, 'O', {
