@@ -40,6 +40,8 @@ class GameMain extends Phaser.Scene {
     create() {
         this.state = {};
         this.state.score = 0;
+        this.state.correct_answer_score = 0;
+        this.state.wrong_answer_score = 0;
         this.state.game_time = Game_Time;
         this.state.start_time = new Date();
 
@@ -85,11 +87,13 @@ class GameMain extends Phaser.Scene {
 
                 this.correct_answer_se.play();
 
+                this.state.correct_answer_score++;
                 this.correct_answer();
                 this.make_problem();
             } else {
                 this.wrong_ans_se.play();
 
+                this.state.wrong_answer_score++;
                 this.wrong_ans();
             }
             this.state.input_wait = false;
@@ -107,7 +111,11 @@ class GameMain extends Phaser.Scene {
     update() {
 
         if (this.state.game_time < 0) {
-            this.scene.start("GameEnd", { "score": this.state.score });
+            this.scene.start("GameEnd", {
+                "score": this.state.score,
+                "correct_answer_score": this.state.correct_answer_score,
+                "wrong_answer_score": this.state.wrong_answer_score,
+            });
         }
 
         this.score_UI.My_Update();
@@ -196,8 +204,10 @@ class GameEnd extends Phaser.Scene {
         super({ key: 'GameEnd', active: false });
     }
 
-    init({ score }) {
+    init({ score, correct_answer_score, wrong_answer_score }) {
         this.score = score;
+        this.correct_answer_score = correct_answer_score;
+        this.wrong_answer_score = wrong_answer_score;
     }
 
     preload() {
@@ -215,19 +225,24 @@ class GameEnd extends Phaser.Scene {
             fontSize: '30px'
         });
 
-        this.add.text(250, 350, `再挑戦`, {
+        this.score_text = this.add.text(250, 300, `正解率: ${Math.floor(1000 * this.correct_answer_score / (this.correct_answer_score + this.wrong_answer_score)) / 10
+            }%`, {
             fontSize: '30px'
         });
-        this.add.rectangle(250, 350, 120, 30).on('pointerup', () => {
+
+        this.add.text(250, 450, `再挑戦`, {
+            fontSize: '30px'
+        });
+        this.add.rectangle(250, 450, 120, 30).on('pointerup', () => {
             this.scene.start("GameMain");
         })
             .setOrigin(0, 0)
             .setInteractive({ useHandCursor: true });
 
-        this.add.text(250, 400, `タイトルへ戻る`, {
+        this.add.text(250, 500, `タイトルへ戻る`, {
             fontSize: '30px'
         });
-        this.add.rectangle(250, 400, 120, 30).on('pointerup', () => {
+        this.add.rectangle(250, 500, 120, 30).on('pointerup', () => {
             this.scene.start("GameTitle");
         })
             .setOrigin(0, 0)
