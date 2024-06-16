@@ -215,19 +215,19 @@ class GameEnd extends Phaser.Scene {
             fontSize: '30px'
         });
 
-        this.add.text(250, 300, `再挑戦`, {
+        this.add.text(250, 350, `再挑戦`, {
             fontSize: '30px'
         });
-        this.add.rectangle(250, 300, 120, 30).on('pointerup', () => {
+        this.add.rectangle(250, 350, 120, 30).on('pointerup', () => {
             this.scene.start("GameMain");
         })
             .setOrigin(0, 0)
             .setInteractive({ useHandCursor: true });
 
-        this.add.text(250, 350, `タイトルへ戻る`, {
+        this.add.text(250, 400, `タイトルへ戻る`, {
             fontSize: '30px'
         });
-        this.add.rectangle(250, 350, 120, 30).on('pointerup', () => {
+        this.add.rectangle(250, 400, 120, 30).on('pointerup', () => {
             this.scene.start("GameTitle");
         })
             .setOrigin(0, 0)
