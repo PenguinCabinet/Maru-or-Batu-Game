@@ -218,10 +218,10 @@ class GameEnd extends Phaser.Scene {
         this.text1 = this.add.text(200, 100, `ゲームクリア`, {
             fontSize: '60px'
         });
-        this.score_text = this.add.text(250, 200, `スコア: ${this.score}`, {
+        this.rank_text = this.add.text(250, 200, `Rank: ${score_to_rank(this.score)}`, {
             fontSize: '30px'
         });
-        this.rank_text = this.add.text(250, 250, `Rank: ${score_to_rank(this.score)}`, {
+        this.score_text = this.add.text(250, 250, `スコア: ${this.score}`, {
             fontSize: '30px'
         });
 
