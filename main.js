@@ -1,4 +1,4 @@
-
+﻿
 const Game_Time = 30;
 
 class UI_text {
@@ -37,6 +37,32 @@ class GameMain extends Phaser.Scene {
         this.correct_answer_se = this.sound.add("correct_answer");
     }
 
+    user_input(p) {
+        this.state.input_wait = true;
+        let user_ans = (p.x <= config.width / 2);
+        if (user_ans == this.state.problem_ans) {
+            let temp = this.add.particles(p.x, p.y, 'red', {
+                speed: 100,
+                scale: { start: 1, end: 0 },
+                timeScale: 3,
+                lifespan: 500,
+            });;
+            setTimeout(() => { temp.stop(true); }, 500);
+
+            this.correct_answer_se.play();
+
+            this.state.correct_answer_score++;
+            this.correct_answer();
+            this.make_problem();
+        } else {
+            this.wrong_ans_se.play();
+
+            this.state.wrong_answer_score++;
+            this.wrong_ans();
+        }
+        this.state.input_wait = false;
+    }
+
     create() {
         this.state = {};
         this.state.score = 0;
@@ -73,31 +99,13 @@ class GameMain extends Phaser.Scene {
 
         this.make_problem();
 
-        this.input.on('pointerup', (p) => {
-            this.state.input_wait = true;
-            let user_ans = (p.x <= config.width / 2);
-            if (user_ans == this.state.problem_ans) {
-                let temp = this.add.particles(p.x, p.y, 'red', {
-                    speed: 100,
-                    scale: { start: 1, end: 0 },
-                    timeScale: 3,
-                    lifespan: 500,
-                });;
-                setTimeout(() => { temp.stop(true); }, 500);
-
-                this.correct_answer_se.play();
-
-                this.state.correct_answer_score++;
-                this.correct_answer();
-                this.make_problem();
-            } else {
-                this.wrong_ans_se.play();
-
-                this.state.wrong_answer_score++;
-                this.wrong_ans();
-            }
-            this.state.input_wait = false;
-        })
+        this.input.on('pointerup', (p) => { this.user_input(p); });
+        this.input.keyboard.on('keydown-LEFT', () => {
+            this.user_input({ x: config.width / 4, y: config.height / 2 })
+        });
+        this.input.keyboard.on('keydown-RIGHT', () => {
+            this.user_input({ x: config.width / 4 * 3, y: config.height / 2 })
+        });
     }
 
     wrong_ans() {
@@ -109,6 +117,7 @@ class GameMain extends Phaser.Scene {
     }
 
     update() {
+
 
         if (this.state.game_time < 0) {
             this.scene.start("GameEnd", {
